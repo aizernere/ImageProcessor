@@ -15,6 +15,7 @@ using System.Drawing.Imaging;
 
 namespace ImageProcess2
 {
+
 	public class ConvMatrix
 	{
 		public int TopLeft = 0, TopMid = 0, TopRight = 0;
@@ -39,8 +40,60 @@ namespace ImageProcess2
 		public const short EDGE_DETECT_KIRSH		= 1;
 		public const short EDGE_DETECT_PREWITT		= 2;
 		public const short EDGE_DETECT_SOBEL		= 3;
+        public static Bitmap ApplyGreenScreen(Bitmap foreground, Bitmap background, Color screenColor, int threshold)
+        {
+            Bitmap result = new Bitmap(foreground.Width, foreground.Height);
 
-		public static bool Invert(Bitmap b)
+            Rectangle rect = new Rectangle(0, 0, foreground.Width, foreground.Height);
+
+            BitmapData fgData = foreground.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData bgData = background.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData resultData = result.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            int bytes = Math.Abs(fgData.Stride) * foreground.Height;
+            byte[] fgBuffer = new byte[bytes];
+            byte[] bgBuffer = new byte[bytes];
+            byte[] resultBuffer = new byte[bytes];
+
+            System.Runtime.InteropServices.Marshal.Copy(fgData.Scan0, fgBuffer, 0, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(bgData.Scan0, bgBuffer, 0, bytes);
+
+            for (int i = 0; i < bytes; i += 4)
+            {
+                int blue = fgBuffer[i];
+                int green = fgBuffer[i + 1];
+                int red = fgBuffer[i + 2];
+
+                int redDiff = red - screenColor.R;
+                int greenDiff = green - screenColor.G;
+                int blueDiff = blue - screenColor.B;
+                int colorDistance = (int)Math.Sqrt(redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff);
+
+                if (colorDistance < threshold)
+                {
+                    resultBuffer[i] = bgBuffer[i];
+                    resultBuffer[i + 1] = bgBuffer[i + 1];
+                    resultBuffer[i + 2] = bgBuffer[i + 2];
+                    resultBuffer[i + 3] = bgBuffer[i + 3];
+                }
+                else
+                {
+                    resultBuffer[i] = fgBuffer[i];
+                    resultBuffer[i + 1] = fgBuffer[i + 1];
+                    resultBuffer[i + 2] = fgBuffer[i + 2];
+                    resultBuffer[i + 3] = fgBuffer[i + 3];
+                }
+            }
+
+            System.Runtime.InteropServices.Marshal.Copy(resultBuffer, 0, resultData.Scan0, bytes);
+
+            foreground.UnlockBits(fgData);
+            background.UnlockBits(bgData);
+            result.UnlockBits(resultData);
+
+            return result;
+        }
+        public static bool Invert(Bitmap b)
 		{
 			// GDI+ still lies to us - the return format is BGR, NOT RGB.
 			BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
@@ -1465,5 +1518,7 @@ namespace ImageProcess2
 
 			return true;
 		}
-	}
+
+        
+    }
 }
