@@ -23,7 +23,7 @@ namespace ImageProcessor
         
         }
 
-        public static void Fliphorizontal(ref Bitmap a, ref Bitmap b)
+        public static void FlipHorizontal(ref Bitmap a, ref Bitmap b)
         {
             b = new Bitmap(a.Width, a.Height);
             for (int x = 0; x < a.Width; x++)
@@ -31,7 +31,7 @@ namespace ImageProcessor
                 for (int y = 0; y < a.Height; y++)
                 {
                     Color data = a.GetPixel(x, y);
-                    b.SetPixel(x, (a.Height-1)-y, data);
+                    b.SetPixel((a.Width - 1) - x, y, data);
                 }
 
             }
@@ -46,10 +46,11 @@ namespace ImageProcessor
                 for (int y = 0; y < a.Height; y++)
                 {
                     Color data = a.GetPixel(x, y);
-                    b.SetPixel((a.Width-1)-x, y, data);
+                    b.SetPixel(x, (a.Height - 1) - y, data);
                 }
 
             }
+            
 
         }
 
@@ -122,7 +123,7 @@ namespace ImageProcessor
 
         public static void Rotate(ref Bitmap a, ref Bitmap b, int value)
         {
-            float angleRadians = (float)value;
+            float angleRadians = (float)(value*Math.PI/180);
             int xCenter = (int)(a.Width / 2);
             int yCenter = (int)(a.Height / 2);
             int width, height, xs, ys, xp, yp, x0, y0;
