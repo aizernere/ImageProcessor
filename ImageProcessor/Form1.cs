@@ -174,9 +174,10 @@ namespace ImageProcessor
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Color mygreen = Color.FromArgb(0, 0, 255);
-            int greygreen = (mygreen.R + mygreen.G + mygreen.B) / 3;
-            int threshold = 5;
+            Color greenScreenColor = Color.FromArgb(0, 255, 0);
+            int threshold = 100;
+
+
             int width = Math.Min(imageA.Width, imageB.Width);
             int height = Math.Min(imageA.Height, imageB.Height);
 
@@ -186,12 +187,15 @@ namespace ImageProcessor
             {
                 for (int y = 0; y < height; y++)
                 {
-                    Color pixel = imageB.GetPixel(x, y);
-                    Color backpixel = imageA.GetPixel(x, y);
-                    int gray = (int)(pixel.R + pixel.G + pixel.B) / 3;
-                    int subtractvalue = Math.Abs(gray - greygreen);
+                    Color pixel = imageB.GetPixel(x, y); 
+                    Color backpixel = imageA.GetPixel(x, y);   
 
-                    if (subtractvalue > threshold)
+                    int redDiff = pixel.R - greenScreenColor.R;
+                    int greenDiff = pixel.G - greenScreenColor.G;
+                    int blueDiff = pixel.B - greenScreenColor.B;
+                    int colorDistance = (int)Math.Sqrt(redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff);
+
+                    if (colorDistance < threshold)
                         resultImage.SetPixel(x, y, backpixel);
                     else
                         resultImage.SetPixel(x, y, pixel);
