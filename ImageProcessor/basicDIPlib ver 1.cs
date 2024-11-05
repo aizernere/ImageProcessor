@@ -244,25 +244,37 @@ namespace ImageProcessor
             Color sample;
             Color gray;
             Byte graydata;
-            //Grayscale Convertion;
+            Bitmap c;
+
+            c = new Bitmap(a.Width, a.Height);
             for (int x = 0; x < a.Width; x++)
             {
                 for (int y = 0; y < a.Height; y++)
                 {
-                    sample = a.GetPixel(x, y);
+                    Color data = a.GetPixel(x, y);
+                    c.SetPixel(x, y, data);
+                }
+
+            }
+            //Grayscale Convertion;
+            for (int x = 0; x < c.Width; x++)
+            {
+                for (int y = 0; y < c.Height; y++)
+                {
+                    sample = c.GetPixel(x, y);
                     graydata = (byte)((sample.R + sample.G + sample.B) / 3);
                     gray = Color.FromArgb(graydata, graydata, graydata);
-                    a.SetPixel(x, y, gray);
+                    c.SetPixel(x, y, gray);
                 }
             }
             
             //histogram 1d data;
             int[] histdata = new int[256]; // array from 0 to 255
-            for (int x = 0; x < a.Width; x++)
+            for (int x = 0; x < c.Width; x++)
             {
-                for (int y = 0; y < a.Height; y++)
+                for (int y = 0; y < c.Height; y++)
                 {
-                    sample = a.GetPixel(x, y);
+                    sample = c.GetPixel(x, y);
                     histdata[sample.R]++; // can be any color property r,g or b
                 }
             }
