@@ -73,6 +73,8 @@
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.trackBar3 = new System.Windows.Forms.TrackBar();
             this.label5 = new System.Windows.Forms.Label();
+            this.button7 = new System.Windows.Forms.Button();
+            this.saveFileDialog2 = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -448,11 +450,26 @@
             this.label5.TabIndex = 19;
             this.label5.Text = "Background Threshold";
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(1067, 658);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(52, 23);
+            this.button7.TabIndex = 20;
+            this.button7.Text = "Save";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // saveFileDialog2
+            // 
+            this.saveFileDialog2.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog2_FileOk);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1131, 693);
+            this.Controls.Add(this.button7);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.trackBar3);
             this.Controls.Add(this.button6);
@@ -538,6 +555,8 @@
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.TrackBar trackBar3;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog2;
     }
 }
 

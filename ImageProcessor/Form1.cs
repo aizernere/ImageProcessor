@@ -19,6 +19,8 @@ namespace ImageProcessor
         Device[] devices;
         int screenColorThreshold;
         private Color screenColor = Color.FromArgb(0, 255, 0);
+        private PictureBox activePictureBox=null;
+
         public Form1()
         {
             InitializeComponent();
@@ -164,6 +166,13 @@ namespace ImageProcessor
 
         private void cameraOnToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (activePictureBox != null)
+            {
+                devices[0].Stop();
+                activePictureBox.Image = null;
+            }
+
+            activePictureBox = pictureBox1;
             devices[0].ShowWindow(pictureBox1);
         }
 
@@ -247,6 +256,13 @@ namespace ImageProcessor
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (activePictureBox != null)
+            {
+                devices[0].Stop();
+                activePictureBox.Image = null;
+            }
+
+            activePictureBox = pictureBox3;
             devices[0].ShowWindow(pictureBox3);
         }
 
@@ -278,6 +294,16 @@ namespace ImageProcessor
         private void trackBar3_Scroll(object sender, EventArgs e)
         {
             screenColorThreshold = trackBar3.Value;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            saveFileDialog2.ShowDialog();
+        }
+
+        private void saveFileDialog2_FileOk(object sender, CancelEventArgs e)
+        {
+            pictureBox5.Image.Save(saveFileDialog2.FileName);
         }
 
         private void button2_Click(object sender, EventArgs e)
