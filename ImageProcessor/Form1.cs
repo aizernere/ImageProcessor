@@ -7,14 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WebCamLib;
+using ImageProcess2;
+using System.Drawing.Imaging;
 
 namespace ImageProcessor
 {
     
     public partial class Form1 : Form
     {
-        Bitmap loaded, processed, imageA, imageB, resultImage ;
+        Bitmap loaded, processed, imageA, imageB, resultImage;
         Device[] devices;
+        int screenColorThreshold;
+        private Color screenColor = Color.FromArgb(0, 255, 0);
         public Form1()
         {
             InitializeComponent();
@@ -154,6 +158,8 @@ namespace ImageProcessor
         private void Form1_Load(object sender, EventArgs e)
         {
             devices = DeviceManager.GetAllDevices();
+            button5.BackColor = screenColor;
+            screenColorThreshold = trackBar3.Value;
         }
 
         private void cameraOnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -174,8 +180,7 @@ namespace ImageProcessor
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Color greenScreenColor = Color.FromArgb(0, 255, 0);
-            int threshold = 100;
+            int threshold = screenColorThreshold;
 
 
             int width = Math.Min(imageA.Width, imageB.Width);
@@ -190,9 +195,9 @@ namespace ImageProcessor
                     Color pixel = imageB.GetPixel(x, y); 
                     Color backpixel = imageA.GetPixel(x, y);   
 
-                    int redDiff = pixel.R - greenScreenColor.R;
-                    int greenDiff = pixel.G - greenScreenColor.G;
-                    int blueDiff = pixel.B - greenScreenColor.B;
+                    int redDiff = pixel.R - screenColor.R;
+                    int greenDiff = pixel.G - screenColor.G;
+                    int blueDiff = pixel.B - screenColor.B;
                     int colorDistance = (int)Math.Sqrt(redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff);
 
                     if (colorDistance < threshold)
@@ -205,26 +210,133 @@ namespace ImageProcessor
             pictureBox5.Image = resultImage;
         }
 
-        private void pictureBox3_Click(object sender, EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
-
+            IDataObject data;
+            Image bmap;
+            devices[0].Sendmessage();
+            data = Clipboard.GetDataObject();
+            if (data != null)
+            {
+                bmap = (Image)data.GetData("System.Drawing.Bitmap");
+                if (bmap != null)
+                {
+                    Bitmap b = new Bitmap(bmap);
+                    BitmapFilter.GrayScale(b);
+                    pictureBox2.Image = b;
+                }
+            }
         }
 
-        private void pictureBox4_Click(object sender, EventArgs e)
+        private void greyscaleToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-
+            timer1.Enabled = true;
         }
 
-        private void pictureBox5_Click(object sender, EventArgs e)
+        private void button5_Click(object sender, EventArgs e)
         {
+            using (ColorDialog colorDialog = new ColorDialog())
+            {
+                if (colorDialog.ShowDialog() == DialogResult.OK)
+                {
+                    screenColor = colorDialog.Color;
+                    button5.BackColor = screenColor;
+                }
+            }
+        }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            devices[0].ShowWindow(pictureBox3);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            timer2.Enabled = true;
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            IDataObject data;
+            Image bmap;
+            devices[0].Sendmessage();
+            data = Clipboard.GetDataObject();
+            if (data != null)
+            {
+                bmap = (Image)data.GetData("System.Drawing.Bitmap");
+                if (bmap != null)
+                {
+                    Bitmap foregroundImage = new Bitmap(bmap);
+                    Bitmap backgroundImage = new Bitmap(imageA, foregroundImage.Width, foregroundImage.Height);
+                    Bitmap resultImage = ApplyGreenScreen(foregroundImage, backgroundImage);
+                    pictureBox5.Image = resultImage;
+                }
+            }
+        }
+
+        private Bitmap ApplyGreenScreen(Bitmap foreground, Bitmap background)
+        {
+            Bitmap result = new Bitmap(foreground.Width, foreground.Height);
+
+            Rectangle rect = new Rectangle(0, 0, foreground.Width, foreground.Height);
+
+            BitmapData fgData = foreground.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData bgData = background.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData resultData = result.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            int bytes = Math.Abs(fgData.Stride) * foreground.Height;
+            byte[] fgBuffer = new byte[bytes];
+            byte[] bgBuffer = new byte[bytes];
+            byte[] resultBuffer = new byte[bytes];
+
+            System.Runtime.InteropServices.Marshal.Copy(fgData.Scan0, fgBuffer, 0, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(bgData.Scan0, bgBuffer, 0, bytes);
+
+            for (int i = 0; i < bytes; i += 4)
+            {
+                int blue = fgBuffer[i];
+                int green = fgBuffer[i + 1];
+                int red = fgBuffer[i + 2];
+
+                int redDiff = red - screenColor.R;
+                int greenDiff = green - screenColor.G;
+                int blueDiff = blue - screenColor.B;
+                int colorDistance = (int)Math.Sqrt(redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff);
+
+                if (colorDistance < screenColorThreshold)
+                {
+                    resultBuffer[i] = bgBuffer[i];
+                    resultBuffer[i + 1] = bgBuffer[i + 1];
+                    resultBuffer[i + 2] = bgBuffer[i + 2];
+                    resultBuffer[i + 3] = bgBuffer[i + 3];
+                }
+                else
+                {
+                    resultBuffer[i] = fgBuffer[i];
+                    resultBuffer[i + 1] = fgBuffer[i + 1];
+                    resultBuffer[i + 2] = fgBuffer[i + 2];
+                    resultBuffer[i + 3] = fgBuffer[i + 3];
+                }
+            }
+
+            System.Runtime.InteropServices.Marshal.Copy(resultBuffer, 0, resultData.Scan0, bytes);
+
+            foreground.UnlockBits(fgData);
+            background.UnlockBits(bgData);
+            result.UnlockBits(resultData);
+
+            return result;
+        }
+
+        private void trackBar3_Scroll(object sender, EventArgs e)
+        {
+            screenColorThreshold = trackBar3.Value;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             openFileDialog3.ShowDialog();
         }
-
 
         private void button1_Click(object sender, EventArgs e)
         {
