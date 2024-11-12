@@ -48,7 +48,7 @@
             this.gaussianBlurToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sharpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meanRemovalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.embossToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.embossFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.laplacianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cameraOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cameraOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,6 +86,9 @@
             this.lossyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.horizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.embossToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.edgeEnhanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.edgeDetectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -149,7 +152,10 @@
             this.gaussianBlurToolStripMenuItem,
             this.sharpenToolStripMenuItem,
             this.meanRemovalToolStripMenuItem,
-            this.embossToolStripMenuItem});
+            this.embossToolStripMenuItem,
+            this.embossFiltersToolStripMenuItem,
+            this.edgeEnhanceToolStripMenuItem,
+            this.edgeDetectToolStripMenuItem});
             this.dIPToolStripMenuItem.Name = "dIPToolStripMenuItem";
             this.dIPToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.dIPToolStripMenuItem.Text = "DIP";
@@ -254,18 +260,18 @@
             this.meanRemovalToolStripMenuItem.Text = "Mean Removal";
             this.meanRemovalToolStripMenuItem.Click += new System.EventHandler(this.meanRemovalToolStripMenuItem_Click);
             // 
-            // embossToolStripMenuItem
+            // embossFiltersToolStripMenuItem
             // 
-            this.embossToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.embossFiltersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.laplacianToolStripMenuItem,
             this.horizontalVerticalToolStripMenuItem,
             this.allDirectionsToolStripMenuItem,
             this.lossyToolStripMenuItem,
             this.horizontalToolStripMenuItem,
             this.verticalToolStripMenuItem});
-            this.embossToolStripMenuItem.Name = "embossToolStripMenuItem";
-            this.embossToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.embossToolStripMenuItem.Text = "Emboss";
+            this.embossFiltersToolStripMenuItem.Name = "embossFiltersToolStripMenuItem";
+            this.embossFiltersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.embossFiltersToolStripMenuItem.Text = "Emboss Filters";
             // 
             // laplacianToolStripMenuItem
             // 
@@ -563,6 +569,27 @@
             this.verticalToolStripMenuItem.Text = "Vertical";
             this.verticalToolStripMenuItem.Click += new System.EventHandler(this.verticalToolStripMenuItem_Click);
             // 
+            // embossToolStripMenuItem
+            // 
+            this.embossToolStripMenuItem.Name = "embossToolStripMenuItem";
+            this.embossToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.embossToolStripMenuItem.Text = "Emboss";
+            this.embossToolStripMenuItem.Click += new System.EventHandler(this.embossToolStripMenuItem_Click);
+            // 
+            // edgeEnhanceToolStripMenuItem
+            // 
+            this.edgeEnhanceToolStripMenuItem.Name = "edgeEnhanceToolStripMenuItem";
+            this.edgeEnhanceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.edgeEnhanceToolStripMenuItem.Text = "Edge Enhance";
+            this.edgeEnhanceToolStripMenuItem.Click += new System.EventHandler(this.edgeEnhanceToolStripMenuItem_Click);
+            // 
+            // edgeDetectToolStripMenuItem
+            // 
+            this.edgeDetectToolStripMenuItem.Name = "edgeDetectToolStripMenuItem";
+            this.edgeDetectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.edgeDetectToolStripMenuItem.Text = "Edge Detect";
+            this.edgeDetectToolStripMenuItem.Click += new System.EventHandler(this.edgeDetectToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -660,13 +687,16 @@
         private System.Windows.Forms.ToolStripMenuItem gaussianBlurToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sharpenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem meanRemovalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem embossToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem embossFiltersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem laplacianToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem horizontalVerticalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem allDirectionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lossyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem horizontalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verticalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem embossToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem edgeEnhanceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem edgeDetectToolStripMenuItem;
     }
 }
 

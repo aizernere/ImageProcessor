@@ -376,6 +376,27 @@ namespace ImageProcessor
             pictureBox2.Image = processed;
         }
 
+        private void embossToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.Emboss(processed);
+            pictureBox2.Image = processed;
+        }
+
+        private void edgeEnhanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EdgeEnhance(processed, 30);
+            pictureBox2.Image = processed;
+        }
+
+        private void edgeDetectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EdgeDetectQuick(processed);
+            pictureBox2.Image = processed;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             openFileDialog3.ShowDialog();
