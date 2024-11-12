@@ -306,6 +306,76 @@ namespace ImageProcessor
             pictureBox5.Image.Save(saveFileDialog2.FileName);
         }
 
+        private void smoothenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.Smooth(processed, 1);
+            pictureBox2.Image = processed;
+        }
+
+        private void gaussianBlurToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.GaussianBlur(processed, 4);
+            pictureBox2.Image = processed;
+        }
+
+        private void sharpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.Sharpen(processed, 11);
+            pictureBox2.Image = processed;
+        }
+
+        private void meanRemovalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.MeanRemoval(processed, 9);
+            pictureBox2.Image = processed;
+        }
+
+        private void laplacianToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EmbossLaplacian(processed);
+            pictureBox2.Image = processed;
+        }
+
+        private void horizontalVerticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EmbossHorzVert(processed);
+            pictureBox2.Image = processed;
+        }
+
+        private void allDirectionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EmbossAll(processed);
+            pictureBox2.Image = processed;
+        }
+
+        private void lossyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EmbossLossy(processed);
+            pictureBox2.Image = processed;
+        }
+
+        private void horizontalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EmbossHorizontal(processed);
+            pictureBox2.Image = processed;
+        }
+
+        private void verticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            processed = new Bitmap(loaded);
+            BitmapFilter.EmbossVertical(processed);
+            pictureBox2.Image = processed;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             openFileDialog3.ShowDialog();
